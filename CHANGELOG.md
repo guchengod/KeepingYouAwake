@@ -5,6 +5,10 @@
 ### v1.6.9
 
 - raised minimum deployment target to macOS 12 _(sadly, this is an external requirement by Apple's Xcode developer tools)_
+- added macOS 27 support
+	- the symbols of the "Activate for Duration" and "Settings…" menu items are now requested to always be visible, since AppKit hides menu item images by default as of macOS 27
+- updated Sparkle to 2.10.0
+	- this includes the security fix released in 2.9.6 (a local privilege escalation allowing removal or creation of files in daemons and CLI tools that run as root using Sparkle) and a fix for delta updates on macOS 27
 
 ### v1.6.8 (2025-09-12)
 

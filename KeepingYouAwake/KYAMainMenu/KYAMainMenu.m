@@ -11,6 +11,25 @@
 #import "KYALocalizedStrings.h"
 #import "KYAAppDelegate.h"
 
+/// Assigns a system symbol image to a menu item.
+/// Since macOS 27, AppKit determines the visibility of menu item images and hides
+/// them by default, so the image is explicitly requested to be visible.
+static void KYARegisterMenuItemSymbolImage(NSMenuItem *menuItem, NSString *symbolName)
+{
+    NSCParameterAssert(menuItem);
+    NSCParameterAssert(symbolName);
+    
+    if(@available(macOS 26.0, *))
+    {
+        Auto image = [NSImage imageWithSystemSymbolName:symbolName accessibilityDescription:nil];
+        menuItem.image = image;
+    }
+    if(@available(macOS 27.0, *))
+    {
+        menuItem.preferredImageVisibility = NSMenuItemImageVisibilityVisible;
+    }
+}
+
 NSMenu *KYACreateMainMenuWithActivationDurationsSubMenu(NSMenu *activationDurationsSubMenu)
 {
     NSCParameterAssert(activationDurationsSubMenu);
@@ -20,10 +39,7 @@ NSMenu *KYACreateMainMenuWithActivationDurationsSubMenu(NSMenu *activationDurati
     Auto activateForDuration = [[NSMenuItem alloc] initWithTitle:KYA_L10N_ACTIVATE_FOR_DURATION
                                                           action:nil
                                                    keyEquivalent:@""];
-    if(@available(macOS 26.0, *))
-    {
-        activateForDuration.image = [NSImage imageWithSystemSymbolName:@"timer" accessibilityDescription:nil];
-    }
+    KYARegisterMenuItemSymbolImage(activateForDuration, @"timer");
     activateForDuration.submenu = activationDurationsSubMenu;
     [mainMenu addItem:activateForDuration];
     
@@ -32,10 +48,7 @@ NSMenu *KYACreateMainMenuWithActivationDurationsSubMenu(NSMenu *activationDurati
     Auto settings = [[NSMenuItem alloc] initWithTitle:KYA_L10N_SETTINGS_ELLIPSIS
                                                action:@selector(showSettingsWindow:)
                                         keyEquivalent:@","];
-    if(@available(macOS 26.0, *))
-    {
-        settings.image = [NSImage imageWithSystemSymbolName:@"gear" accessibilityDescription:nil];
-    }
+    KYARegisterMenuItemSymbolImage(settings, @"gear");
     [mainMenu addItem:settings];
     
     [mainMenu addItem:NSMenuItem.separatorItem];
